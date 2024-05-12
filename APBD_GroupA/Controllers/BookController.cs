@@ -24,7 +24,7 @@ public class BookController : ControllerBase
             return NotFound("Not exists");
         }
 
-        var book = _bookRepository.getGenres(id);
+        var book = await _bookRepository.getGenres(id);
 
         return Ok(book);
     }

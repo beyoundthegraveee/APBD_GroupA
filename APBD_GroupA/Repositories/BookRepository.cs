@@ -21,13 +21,17 @@ public class BookRepository : IBookRepository
         await using SqlCommand command =
             new SqlCommand();
 
+        command.Connection = connection;
+        
         await connection.OpenAsync();
         
         command.Parameters.AddWithValue("@idBook", bookId);
 
         command.CommandText = "SELECT COUNT(*) FROM Books WHERE PK = @idBook";
 
-        return (int) await command.ExecuteScalarAsync() > 0;
+        var cmd = (int) await command.ExecuteScalarAsync();
+
+        return cmd > 0;
 
     }
 
@@ -38,6 +42,8 @@ public class BookRepository : IBookRepository
 
         await using SqlCommand command =
             new SqlCommand();
+        
+        command.Connection = connection;
 
         await connection.OpenAsync();
         
@@ -59,7 +65,7 @@ public class BookRepository : IBookRepository
         await reader.CloseAsync();
         
         command.CommandText =
-            "SELECT PK, title FROM books WHERE PK = @bookID";
+            "SELECT PK, title FROM books WHERE PK = @idBook";
 
         reader = await command.ExecuteReaderAsync();
 
@@ -75,6 +81,8 @@ public class BookRepository : IBookRepository
             };
 
         }
+        
+        await reader.CloseAsync();
                 
                 
                
